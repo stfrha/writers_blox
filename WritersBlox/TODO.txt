@@ -1,0 +1,7 @@
+﻿TODO in Writers Blox
+
+DONE: Translate all string resources to swedish 
+SEMIDONE: Refere to main window in all message boxes and dialog
+SEMIDONE: Convert longitude/latitude to real format
+Fix IsModified to better
+DONE: Do check for Google Earth at loading of project, add property that disables the GE-buttons

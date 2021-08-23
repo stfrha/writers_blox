@@ -1,0 +1,108 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid x:Key="TopLevelGrid" Margin="10" ShowGridLines="False" >
+        <Grid.Background>
+            <ImageBrush 
+                Stretch="UniformToFill"
+                ImageSource="..\Images\CyanGradient.png" 
+                AlignmentY="Top" 
+                AlignmentX="Left"/>
+        </Grid.Background>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="475"/>
+            <ColumnDefinition Width="*" MaxWidth="200"/>
+        </Grid.ColumnDefinitions>
+    </Grid>
+
+    <!-- This grid should be column 2 of TopLevelGrid --><!--
+    <Grid x:Name="Level2Grid" Grid.Row="2" ShowGridLines="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        --><!-- Use following line here: <TextBlock Grid.Row="0" Margin="5" Text="Displaying a Scene:" /> -->
+        <!-- Insert Level3Grid here --><!--
+    </Grid>
+
+    --><!-- This grid should be row 1 of Level2Grid --><!--
+    <Grid x:Key="Level3Grid" Grid.Row="1" ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="325"/>
+        </Grid.ColumnDefinitions>
+        <Image Grid.Column="0" Width="96" Height="96" Source="Images\Icons\Scene2.png" />
+    </Grid>
+    
+    <Grid x:Key="GridLevel4" Grid.Column="1" ShowGridLines="False">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        --><!-- Here data filed editors are included like the one below on different Grid rows and columns -->
+        <!-- Use following line here: <Label Grid.Column="0" Grid.Row="0" Margin="2" Content="Headline:"/> -->
+        <!-- Use following line here <TextBox Grid.Column="1" Grid.Row="0" Margin="2" Text="{Binding Headline}" />--><!--
+    </Grid>
+    
+    <DockPanel x:Key="BloxDescription" Grid.Row="2" LastChildFill="True" Margin="5">
+        <Label DockPanel.Dock="Top" Content="Description:" />
+        <TextBox Text="{Binding Description}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="False" AutoWordSelection="True"/>
+    </DockPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type local:StoryEvent}">
+                    <StackPanel Orientation="Horizontal" 
+                                                            Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Add Existing Event to Scene..." Command="{Binding Data.AddEventToBlox, Source={StaticResource DataContextProxy}}"
+                                                                    CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                                <Separator />
+                                <MenuItem Header="Edit Event" Command="{Binding Data.EditEvent, Source={StaticResource DataContextProxy}}"
+                                                                    CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                <Separator />
+                                <MenuItem Header="Remove Event from Scene" Command="{Binding Data.RemoveEventFromBlox, Source={StaticResource DataContextProxy}}"
+                                                                    CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <Image Width="24" Height="24" Margin="3,0" Source="Images\Icons\Event2.png" />
+                        <Label Content="{Binding Headline}" />
+                    </StackPanel>
+                </DataTemplate>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" Margin="5" Text="Events of the Scene:" />
+            <ListView Grid.Row="1" Margin="5,2,5,5" DockPanel.Dock="Top" 
+                                                  Name="sceneEventsList" 
+                                                  ItemsSource="{Binding StoryEvents}" 
+                                                  dd:DragDrop.IsDropTarget="True"
+                                                  dd:DragDrop.DropHandler="{Binding Data, Source={StaticResource DataContextProxy}}"                                                   
+                                                  PreviewMouseRightButtonDown="PreviewMouseRightButtonDown" >
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Add Existing Event to Scene..." Command="{Binding Data.AddEventToBlox, Source={StaticResource DataContextProxy}}"
+                                                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </Grid>
+    </Grid>-->
+
+</ResourceDictionary>

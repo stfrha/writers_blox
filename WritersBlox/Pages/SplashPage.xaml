@@ -1,0 +1,119 @@
+﻿<Page x:Class="WritersBlox.Pages.SplashPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+      xmlns:local="clr-namespace:WritersBlox"
+      mc:Ignorable="d" 
+      d:DesignHeight="460" d:DesignWidth="720"
+	  Title="Välj projekt">
+    <Page.Resources>
+        <local:BindingProxy x:Key="DataContextProxy" Data="{Binding Path=TheModel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}}" />
+        <local:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter" />
+        <Style
+                x:Key="LinkButton"
+                TargetType="Button">
+            <Setter
+                    Property="Template">
+                <Setter.Value>
+                    <ControlTemplate
+                            TargetType="Button">
+                        <TextBlock
+                            TextDecorations="Underline">
+                <ContentPresenter /></TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter
+                Property="Foreground"
+                Value="Blue" />
+            <Style.Triggers>
+                <Trigger
+                    Property="IsMouseOver"
+                    Value="true">
+                    <Setter
+                        Property="Foreground"
+                        Value="Red" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </Page.Resources>
+    <Page.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="White" Offset="0.0" />
+            <GradientStop Color="LightGray" Offset="0.5" />
+            <GradientStop Color="White" Offset="1.0" />
+        </LinearGradientBrush>
+    </Page.Background>
+    <Grid Margin="3" ShowGridLines="False" >
+        <Grid.Background>
+            <ImageBrush ImageSource="pack://application:,,,/Images/wb_icon_512.png" Opacity="0.2" Stretch="None"  />
+        </Grid.Background>
+        <StackPanel Orientation="Vertical">
+            <Label HorizontalAlignment="Center" ForceCursor="True" FontStyle="Italic" FontSize="100" FontWeight="ExtraBlack" Foreground="#FF3127FB">
+                <Label.Effect>
+                    <DropShadowEffect Color="#FFC9C9D1" ShadowDepth="10"/>
+                </Label.Effect>Writers Blox
+            </Label>
+            <Label HorizontalAlignment="Center" FontSize="50" FontStyle="Italic" Foreground="#FF3127FB">
+                <Label.Effect>
+                    <DropShadowEffect  Color="#FFC9C9D1" ShadowDepth="7"/>
+                </Label.Effect>Assistenten för ditt manus
+            </Label>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Margin="10" Width="150" Height="150" 
+                        Command="{Binding Data.NewProject, Source={StaticResource DataContextProxy}}" >
+                    <StackPanel>
+                        <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">Skapa ett</Label>
+                        <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">nytt projekt</Label>
+                    </StackPanel>
+                </Button>
+                <Button Margin="10" Width="150" Height="150"
+                        Command="{Binding Data.OpenProject, Source={StaticResource DataContextProxy}}" >
+                    <StackPanel>
+                        <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">Öppna ett</Label>
+                        <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">befintligt</Label>
+                        <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">projekt</Label>
+                    </StackPanel>
+                </Button>
+                <StackPanel Margin="10" >
+                    <Label FontStyle="Italic" FontWeight="Bold" Foreground="Black" FontSize="12">Tidigare projektfiler:</Label>
+                    <ListBox 
+                            BorderBrush="Transparent" 
+                            Background="Transparent" 
+                            ItemsSource="{Binding RecentList}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <Button 
+                                        Margin="2"
+                                        Style="{StaticResource LinkButton}" 
+                                        Command="{Binding Data.OpenProjectFile, Source={StaticResource DataContextProxy}}"
+                                        CommandParameter="{Binding Path}"
+                                        Content="{Binding Title}">
+                                    <Button.ToolTip>
+                                        <ToolTip>
+                                            <StackPanel Orientation="Vertical">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Margin="-4" FontSize="10" >Projektfil:</Label>
+                                                    <Label Margin="-4" Content="{Binding Path}" FontSize="10" />
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Label Margin="-4" FontSize="10" >Skapad:</Label>
+                                                    <Label Margin="-4" Content="{Binding CreatedDate}" FontSize="10" />
+                                                </StackPanel>
+                                                <Label Margin="-4" Content="Beskrivning:" FontSize="10" />
+                                                <Label Margin="-4" Content="{Binding Description}" FontSize="10" />
+                                            </StackPanel>
+                                        </ToolTip>
+                                    </Button.ToolTip>
+                                </Button>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Page>

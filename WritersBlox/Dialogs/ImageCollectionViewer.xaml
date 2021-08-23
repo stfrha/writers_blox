@@ -1,0 +1,65 @@
+﻿<Window x:Class="WritersBlox.Dialogs.ImageCollectionViewer"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Bildvisare" Height="768" Width="1024" >
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="112"/>
+            <RowDefinition Height="30"/>
+        </Grid.RowDefinitions>
+        <Image 
+                Grid.Column="0" >
+            <Image.Style>
+                <Style TargetType="{x:Type Image}">
+                    <Setter Property="Source" Value="{Binding SelectedImage.Image}" />
+                    <Style.Triggers>
+                        <DataTrigger Value="True" Binding="{Binding SelectedImage.BrokenLink}">
+                            <Setter Property="Source" Value="pack://application:,,,/Images/broken_link_swe.png"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Image.Style>
+        </Image>
+        
+        <ListBox Grid.Row="1" 
+                 Margin="2" 
+                 Name="SomeList" 
+                 ItemsSource="{Binding Images}" 
+                 SelectedItem="{Binding SelectedImage}">
+            <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ListBox.ItemsPanel>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}">
+                        <Image 
+                                Height="100" 
+                                Width="100" 
+                                Margin="2" >
+                            <Image.Style>
+                                <Style TargetType="{x:Type Image}">
+                                    <Setter Property="Source" Value="{Binding Image}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Value="True" Binding="{Binding BrokenLink}">
+                                            <Setter Property="Source" Value="pack://application:,,,/Images/broken_link_swe.png"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Image.Style>
+                        </Image>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button 
+            Grid.Row="2"
+            Width="200"
+            Content="Stäng" 
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsCancel="True" />
+    </Grid>
+</Window>

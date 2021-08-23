@@ -1,0 +1,401 @@
+﻿<Window x:Class="WritersBlox.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+        xmlns:local="clr-namespace:WritersBlox"
+        xmlns:views="clr-namespace:WritersBlox.Views"
+        Title="Writers Blox - Assistenten för ditt manus" Width="1280" Height="1024"
+        MouseMove="OnMouseMove" Loaded="Window_Loaded">
+
+    <Window.DataContext>
+        <local:WritersBloxVewModel x:Name="MyViewModel"/>
+    </Window.DataContext>
+    <Window.Resources>
+        <local:DatabindingDebugConverter x:Key="debugConverter" />
+        <local:BindingProxy x:Key="DataContextProxy" Data="{Binding}" />
+        <local:RadioButtonCheckedConverter x:Key="RadioButtonCheckedConverter" />
+        <HierarchicalDataTemplate DataType="{x:Type local:DataChild}" ItemsSource="{Binding Children}" >
+            <StackPanel Orientation="Horizontal" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}">
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Lägg till scen" Command="{Binding Data.AddScene, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="Lägg till karaktär" Command="{Binding Data.AddCharacter, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="Lägg till plats" Command="{Binding Data.AddLocation, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="Lägg till händelse" Command="{Binding Data.AddStoryEvent, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator />
+                        <MenuItem Header="Lägg till katalog" Command="{Binding Data.AddFolder, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator />
+                        <MenuItem Header="Byt namn" Command="{Binding Data.RenameFolder, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <MenuItem Header="Radera" Command="{Binding Data.DeleteFolder, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"  />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
+                <Image Source="pack://application:,,,/Images/Icons/folder_16.png" />
+                <Label Content="{Binding FolderName}" />
+            </StackPanel>
+        </HierarchicalDataTemplate>
+        <DataTemplate DataType="{x:Type local:Scene}">
+            <StackPanel Orientation="Horizontal" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}">
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Redigera scen" Command="{Binding Data.EditScene, Source={StaticResource DataContextProxy}}"
+                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator />
+                        <MenuItem Header="Radera" Command="{Binding Data.DeleteBlox, Source={StaticResource DataContextProxy}}" 
+                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"  />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
+                <Image Source="pack://application:,,,/Images/Icons/bubble_16.png" />
+                <Label Content="{Binding Headline}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:Character}">
+            <StackPanel Orientation="Horizontal" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}" >
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Redigera karaktär" Command="{Binding Data.EditCharacter, Source={StaticResource DataContextProxy}}"
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                        <Separator />
+                        <MenuItem Header="Radera" Command="{Binding Data.DeleteBlox, Source={StaticResource DataContextProxy}}" 
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"  />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
+                <Image Source="pack://application:,,,/Images/Icons/user_16.png" />
+                <Label Content="{Binding Name}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:Location}">
+            <StackPanel Orientation="Horizontal" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}">
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Redigera plats" Command="{Binding Data.EditLocation, Source={StaticResource DataContextProxy}}"
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        <Separator />
+                        <MenuItem Header="Radera" Command="{Binding Data.DeleteBlox, Source={StaticResource DataContextProxy}}" 
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"  />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
+                <Image Source="pack://application:,,,/Images/Icons/tag_16.png" />
+                <Label Content="{Binding Headline}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type local:StoryEvent}">
+            <StackPanel Orientation="Horizontal" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}">
+                <StackPanel.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Redigera händelse" Command="{Binding Data.EditEvent, Source={StaticResource DataContextProxy}}"
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                        <Separator />
+                        <MenuItem Header="Radera" Command="{Binding Data.DeleteEvent, Source={StaticResource DataContextProxy}}" 
+                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"  />
+                    </ContextMenu>
+                </StackPanel.ContextMenu>
+                <Image Source="pack://application:,,,/Images/Icons/clock_16.png" />
+                <Label Content="{Binding Headline}" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="Splash" DataType="{x:Type local:WritersBloxVewModel}">
+            <Grid Margin="3" ShowGridLines="False" >
+                <Grid.Background>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="White" Offset="0.0" />
+                        <GradientStop Color="LightGray" Offset="0.5" />
+                        <GradientStop Color="White" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Grid.Background>
+                <StackPanel Orientation="Vertical">
+                    <Label HorizontalAlignment="Center" ForceCursor="True" FontStyle="Italic" FontSize="100" FontWeight="ExtraBlack" Foreground="#FF3127FB">
+                        <Label.Effect>
+                            <DropShadowEffect Color="#FFC9C9D1" ShadowDepth="10"/>
+                        </Label.Effect> Writers Blox
+                    </Label>
+                    <Label HorizontalAlignment="Center" FontSize="50" FontStyle="Italic" Foreground="#FF3127FB">
+                        <Label.Effect>
+                            <DropShadowEffect  Color="#FFC9C9D1" ShadowDepth="7"/>
+                        </Label.Effect> Assistenten för ditt manus</Label>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button Margin="10" Width="150" Height="150">
+                            <StackPanel>
+                                <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">Skapa ett</Label>
+                                <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">nytt projekt</Label>
+                            </StackPanel>
+                        </Button>
+                        <Button Margin="10" Width="150" Height="150">
+                            <StackPanel>
+                                <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">Öppna ett</Label>
+                                <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">befintligt</Label>
+                                <Label Foreground="Green" FontSize="20" FontWeight="ExtraBlack" HorizontalAlignment="Center">projekt</Label>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="25"/>
+            <RowDefinition Height="60"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" >
+            <MenuItem Header="Arkiv">
+                <MenuItem Header="Nytt Projekt" Command="{Binding NewProject}"  />
+                <Separator/>
+                <MenuItem Header="Öppna Projekt..." Command="{Binding OpenProject}"  />
+                <MenuItem Header="Populate Project (för test)" Command="{Binding PopulateProject}" />
+                <Separator/>
+                <MenuItem Header="Stäng Projektet" Command="{Binding CloseProject}" />
+                <Separator/>
+                <MenuItem Header="Spara Projektet" Command="{Binding SaveProject}" />
+                <!--<MenuItem Header="Spara Projektet som..."  />-->
+                <Separator/>
+                <MenuItem Header="Avsluta" Click="MenuItem_Click"  />
+            </MenuItem>
+            <MenuItem Header="Element">
+                <MenuItem Header="Lägg till karaktär" Command="{Binding AddCharacter}" CommandParameter="{Binding SelectedItem, ElementName=mainTree}"/>
+                <MenuItem Header="Redigera karaktär" Command="{Binding EditCharacter}" CommandParameter="{Binding SelectedItem, ElementName=mainTree}"/>
+            </MenuItem>
+        </Menu>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ett nytt projekt" 
+                Command="{Binding NewProject}" >
+                <Image Source="pack://application:,,,/Images/Icons/favorites_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Öppna ett projekt" 
+                Command="{Binding OpenProject}" >
+                <Image Source="pack://application:,,,/Images/Icons/import_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Spara" 
+                Command="{Binding SaveProject}" >
+                <Image Source="pack://application:,,,/Images/Icons/save_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Gå till projektinformationen" 
+                Command="{Binding GoToStart}" >
+                <Image Source="pack://application:,,,/Images/Icons/home_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ny katalog" 
+                Command="{Binding AddFolder}" >
+                <Image Source="pack://application:,,,/Images/Icons/folder_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ny scen"
+                Command="{Binding AddScene}" >
+                <Image Source="pack://application:,,,/Images/Icons/bubble_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ny karaktär"
+                Command="{Binding AddCharacter}" >
+                <Image Source="pack://application:,,,/Images/Icons/user_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ny plats"
+                Command="{Binding AddLocation}" >
+                <Image Source="pack://application:,,,/Images/Icons/tag_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Skapa ny händelse"
+                Command="{Binding AddStoryEvent}" >
+                <Image Source="pack://application:,,,/Images/Icons/clock_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Radera"
+                Command="{Binding DeleteObject}" >
+                <Image Source="pack://application:,,,/Images/Icons/stop_48.png" />
+            </Button>
+            <Button 
+                Margin="2"
+                ToolTip="Debugg-kommando"
+                Command="{Binding DebugCommand}"  >
+                <Image Source="pack://application:,,,/Images/Icons/cog_48.png" />
+            </Button>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Debugmeddelande 1: " />
+                    <Label Content="{Binding Message}"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Debugmeddelande 2: " />
+                    <Label Content="{Binding Message2}"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+        <Grid Margin="0" Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Margin="0" Grid.Column="0">
+                <Grid.Resources>
+                    <LinearGradientBrush x:Key="TitleBrush" StartPoint="0,0" EndPoint="0,1">
+                        <GradientStop Color="AliceBlue" Offset="0.0" />
+                        <GradientStop Color="LightBlue" Offset="0.5" />
+                        <GradientStop Color="AliceBlue" Offset="1.0" />
+                    </LinearGradientBrush>
+                    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="AliceBlue" Offset="0.0" />
+                        <GradientStop Color="LightBlue" Offset="0.5" />
+                        <GradientStop Color="AliceBlue" Offset="1.0" />
+                    </LinearGradientBrush>
+                </Grid.Resources>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="22" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock Grid.Row="0" Height="20" Padding="7,0,0,0" Text="Projektträd" 
+                           Background="{Binding Source={StaticResource TitleBrush}}"/>
+                <TreeView Name="mainTree" 
+                        BorderThickness="0"
+                        Background="{Binding Source={StaticResource BackgroundBrush}}"
+                        Grid.Row="1"
+                        dd:DragDrop.IsDragSource="True"
+                        dd:DragDrop.IsDropTarget="True"
+                        dd:DragDrop.DropHandler="{Binding}" 
+                        dd:DragDrop.DragHandler="{Binding}"
+                        ItemsSource="{Binding Root}" 
+                        PreviewMouseRightButtonDown="PreviewMouseRightButtonDown" 
+                        Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TreeView}}}"
+                        VerticalContentAlignment="Stretch" >
+                    <TreeView.Resources>
+                        <Style TargetType="TreeViewItem">
+                            <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                            <Setter Property="IsExpanded" Value="{Binding Path=IsExpanded, Mode=TwoWay}" />
+                        </Style>
+                    </TreeView.Resources>
+                    <TreeView.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="Lägg till katalog" Command="{Binding Data.AddFolder, Source={StaticResource DataContextProxy}}" 
+                    CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                        </ContextMenu>
+                    </TreeView.ContextMenu>
+                </TreeView>
+
+            </Grid>
+            <GridSplitter Grid.Column="1" Width="5" ResizeDirection="Columns" HorizontalAlignment="Left" VerticalAlignment="Stretch">
+                <GridSplitter.Background>
+                    <LinearGradientBrush EndPoint="0,0.5" StartPoint="1,0.5">
+                        <GradientStop Color="#FF808385" Offset="0"/>
+                        <GradientStop Color="#FFECF1F7" Offset="1"/>
+                    </LinearGradientBrush>
+                </GridSplitter.Background>
+            </GridSplitter>
+            <Grid Grid.Column="2" Margin="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="550"/>
+                    <RowDefinition Height="5"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Frame x:Name="_editFrame" 
+                       Grid.Row="0"
+                       Background="LightGray" 
+                       NavigationUIVisibility="Visible"
+                       Navigated="_editFrame_Navigated"/>
+                <GridSplitter Grid.Row="1" Height="5" ResizeDirection="Rows" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+                    <GridSplitter.Background>
+                        <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
+                            <GradientStop Color="#FF808385" Offset="0"/>
+                            <GradientStop Color="#FFECF1F7" Offset="1"/>
+                        </LinearGradientBrush>
+                    </GridSplitter.Background>
+                </GridSplitter>
+                <views:TimelineDataGrid x:Name="_timelineGrid" 
+                        Grid.Row="2"
+                        VerticalAlignment="Stretch"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        FrozenColumnCount="1"
+                        Foreground="Green" 
+                        Background="Transparent"
+                        RulerPenColor="Violet"
+                        ItemsSource="{Binding EventsBeingEdited}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Rubrik" Binding="{Binding Headline}" >
+                        </DataGridTextColumn>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <views:TimelineRuler 
+                                            RenderOptions.EdgeMode="Aliased"
+                                            ClipToBounds="True"
+                                            Height="28" 
+                                            RulerPenColor="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=Foreground.Color}"
+                                            StartTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DisplayStartTime}"
+                                            EndTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DisplayEndTime}" 
+                                            SecondsPerPixel="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=SecondsPerPixel}" 
+                                            Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=Background}"
+                                    />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <views:TimelinePanel
+                                        Margin="4,0,0,0"
+                                        RenderOptions.EdgeMode="Aliased"
+                                        ClipToBounds="True"
+                                        GridlinesVisible="True"
+                                        Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=Background}"
+                                        CanvasStartTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DisplayStartTime}"
+                                        CanvasEndTime="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=DisplayEndTime}" 
+                                        RulerPenColor="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=Foreground.Color}"
+                                        SecondsPerPixel="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DataGrid}}, Path=SecondsPerPixel}"
+                                        StartTime="{Binding StartTime}"
+                                        EndTime="{Binding EndTime}"
+                                        EventMode="{Binding EventMode}"
+                                        MouseWheel="TimelineRuler_MouseWheel">
+                                        <!-- MouseWheel="TimelineRuler_MouseWheel" -->
+                                        <views:TimelineItemPanel>
+                                            <Panel.ToolTip>
+                                                <ToolTip>
+                                                    <StackPanel Orientation="Vertical">
+                                                        <Label Content="{Binding Headline}" />
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label>Starttid:</Label>
+                                                            <Label Content="{Binding StartTime}" />
+                                                        </StackPanel>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <Label>Sluttid:</Label>
+                                                            <Label Content="{Binding EndTime}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </ToolTip>
+                                            </Panel.ToolTip>
+                                            <Button Height="20" Content="{Binding Headline}" />
+                                        </views:TimelineItemPanel>
+                                    </views:TimelinePanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </views:TimelineDataGrid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

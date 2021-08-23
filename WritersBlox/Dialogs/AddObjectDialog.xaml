@@ -1,0 +1,23 @@
+﻿<Window x:Class="WritersBlox.AddObjectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:WritersBlox"
+        Title="{Binding Path=DialogTitle}" Height="150" Width="300" ContentRendered="Window_ContentRendered">
+    <Window.DataContext>
+        <local:AddObjectDialogModelView />
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height="35"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0" Orientation="Vertical" >
+            <Label Grid.Column="0" Margin="5" Content="{Binding PromptText}" />
+            <TextBox x:Name="ObjName" Grid.Column="0" Margin="5" Text="{Binding NewObjectName}"/>
+        </StackPanel>
+        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Margin="5" Width="100" IsDefault="True" Click="Button_Click">Ok</Button>
+            <Button Margin="5" Width="100" IsCancel="True">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

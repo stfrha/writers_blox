@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Placemark id="21">
+	<name>Pohorelec, 118 00 Prag 1, Tjeckien</name>
+	<address>Pohorelec, 118 00 Prag 1, Tjeckien</address>
+	<styleUrl>C:/Users/Fredrik/AppData/LocalLow/Google/GoogleEarth/myplaces.kml#geocode</styleUrl>
+	<MultiGeometry>
+		<Point>
+			<coordinates>14.388766,50.087518,0</coordinates>
+		</Point>
+		<LinearRing>
+			<coordinates>
+				14.37596,50.0817904,0 14.37596,50.0932456,0 14.401572,50.0932456,0 14.401572,50.0817904,0 14.37596,50.0817904,0 
+			</coordinates>
+		</LinearRing>
+	</MultiGeometry>
+	<AddressDetails Accuracy="3" xmlns="urn:oasis:names:tc:ciq:xsdschema:xAL:2.0"><Country><CountryNameCode>CZ</CountryNameCode><AdministrativeArea><AdministrativeAreaName>Prag</AdministrativeAreaName><SubAdministrativeArea><SubAdministrativeAreaName>Prag</SubAdministrativeAreaName><Locality><DependentLocality><DependentLocalityName>Pohorelec</DependentLocalityName></DependentLocality></Locality></SubAdministrativeArea></AdministrativeArea></Country></AddressDetails>
+</Placemark>
+</kml>

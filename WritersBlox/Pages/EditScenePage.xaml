@@ -1,0 +1,207 @@
+﻿<Page x:Class="WritersBlox.Pages.EditScenePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:dd="clr-namespace:GongSolutions.Wpf.DragDrop;assembly=GongSolutions.Wpf.DragDrop"
+      xmlns:local="clr-namespace:WritersBlox"
+      mc:Ignorable="d" 
+      d:DesignHeight="460" d:DesignWidth="976"
+	  Title="{Binding Path=Headline}" >
+    <Page.Resources>
+        <local:BindingProxy x:Key="DataContextProxy" Data="{Binding Path=TheModel, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}}" />
+        <local:ImageSizeEnumDoubleConverter x:Key="ImageSizeConverter" />
+    </Page.Resources>
+    <Grid Margin="3" ShowGridLines="False">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Color="White" Offset="0.0" />
+                <GradientStop Color="LightCyan" Offset="0.5" />
+                <GradientStop Color="White" Offset="1.0" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="475"/>
+            <ColumnDefinition Width="*" MaxWidth="200"/>
+            <ColumnDefinition Width="285" />
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" ShowGridLines="False" >
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="150"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Grid.Row="0" Margin="5" Text="Redigera en scen" />
+            <Grid Grid.Row="1" ShowGridLines="False">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="150"/>
+                    <ColumnDefinition Width="325"/>
+                </Grid.ColumnDefinitions>
+                <Image 
+                        Grid.Column="0" 
+                        Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ImageSize, Converter={StaticResource ImageSizeConverter}}" 
+                        Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ImageSize, Converter={StaticResource ImageSizeConverter}}" 
+                        Margin="2" >
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" Value="{Binding ProfileImage.Image}" />
+                            <Style.Triggers>
+                                <DataTrigger Value="True" Binding="{Binding ProfileImage.BrokenLink}">
+                                    <Setter Property="Source" Value="pack://application:,,,/Images/broken_link_swe.png"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+                <Grid Grid.Column="1" ShowGridLines="False">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Column="0" Grid.Row="0" Margin="2" Content="Rubrik:"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Margin="2" Text="{Binding Path=Headline}" />
+                </Grid>
+            </Grid>
+            <DockPanel Grid.Row="2" LastChildFill="True" Margin="5">
+                <Label DockPanel.Dock="Top" Content="Beskrivning:" />
+                <TextBox Text="{Binding Description}" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalScrollBarVisibility="Auto" AcceptsReturn="True" AcceptsTab="False" AutoWordSelection="True"/>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.Resources>
+                <DataTemplate DataType="{x:Type local:StoryEvent}">
+                    <StackPanel Orientation="Horizontal" Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}">
+                        <StackPanel.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Lägg till en händelse till scenen..." Command="{Binding Data.AddEventToBlox, Source={StaticResource DataContextProxy}}"
+                                                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                                <Separator />
+                                <MenuItem Header="Rediger händelsen" Command="{Binding Data.EditEvent, Source={StaticResource DataContextProxy}}"
+                                                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                <Separator />
+                                <MenuItem Header="Ta bort händelsen från scenen" Command="{Binding Data.RemoveEventFromBlox, Source={StaticResource DataContextProxy}}"
+                                                                CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                            </ContextMenu>
+                        </StackPanel.ContextMenu>
+                        <Image Source="pack://application:,,,/Images/Icons/clock_16.png" />
+                        <Label Content="{Binding Headline}" />
+                    </StackPanel>
+                </DataTemplate>
+            </Grid.Resources>
+            <TextBlock Grid.Row="0" Margin="5" Text="Scenens händelser:" />
+            <ListView Grid.Row="1" Margin="5,2,5,5" DockPanel.Dock="Top" 
+                    Name="sceneEventsList" 
+                    ItemsSource="{Binding StoryEvents}" 
+                    dd:DragDrop.IsDropTarget="True"
+                    dd:DragDrop.DropHandler="{Binding Data, Source={StaticResource DataContextProxy}}"                                                   
+                    PreviewMouseRightButtonDown="PreviewMouseRightButtonDown" >
+                <ListView.Resources>
+                    <Style TargetType="ListViewItem">
+                        <Setter Property="IsSelected" Value="{Binding Path=IsSelected, Mode=TwoWay}" />
+                    </Style>
+                </ListView.Resources>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Lägg till en händelse till scenen..." Command="{Binding Data.AddEventToBlox, Source={StaticResource DataContextProxy}}"
+                                                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                    </ContextMenu>
+                </ListView.ContextMenu>
+            </ListView>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" >
+                <TextBlock Margin="5" Text="Bilder från scenen:" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Button 
+                        Grid.Column="0" 
+                        Margin="5,2,5,2" 
+                        Command="{Binding Data.AddImage, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding Data.BeingEdited, Source={StaticResource DataContextProxy}}" >Lägg till</Button>
+                    <Button 
+                        Grid.Column="1" 
+                        Margin="5,2,5,2"
+                        Command="{Binding Data.LargerImages, Source={StaticResource DataContextProxy}}"
+                        CommandParameter="{Binding SelectedImage}" >Större</Button>
+                    <Button 
+                        Grid.Column="2" 
+                        Margin="5,2,5,2"
+                        Command="{Binding Data.SmallerImages, Source={StaticResource DataContextProxy}}" 
+                        CommandParameter="{Binding Data.BeingEdited, Source={StaticResource DataContextProxy}}" >Mindre</Button>
+                </Grid>
+            </StackPanel>
+            <Grid Grid.Row="1" >
+                <ListBox 
+                    Margin="5,2,5,5" 
+                    Name="SomeList" 
+                    ItemsSource="{Binding Images}" 
+                    SelectedItem="{Binding SelectedImage}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" Width="271" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Tag="{Binding Path=SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}">
+                                <StackPanel.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="Titta på bild"                                             
+                                            Command="{Binding Data.ViewImage, Source={StaticResource DataContextProxy}}"
+                                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                                        <MenuItem Header="Ta bort" 
+                                            Command="{Binding Data.RemoveImage, Source={StaticResource DataContextProxy}}"
+                                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}"/>
+                                        <MenuItem Header="Använd som scenens profilbild"                                             
+                                            Command="{Binding Data.SetProfileImage, Source={StaticResource DataContextProxy}}"
+                                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                                        <Separator />
+                                        <MenuItem Header="Hitta bildfilen..."
+                                            Command="{Binding Data.RelinkImage, Source={StaticResource DataContextProxy}}"
+                                            CommandParameter="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContextMenu}}}" />
+                                    </ContextMenu>
+                                </StackPanel.ContextMenu>
+                                <Image 
+                                    Height="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ImageSize, Converter={StaticResource ImageSizeConverter}}" 
+                                    Width="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Page}}, Path=DataContext.ImageSize, Converter={StaticResource ImageSizeConverter}}" 
+                                    Margin="2" >
+                                    <Image.Style>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Setter Property="Source" Value="{Binding Image}" />
+                                            <Style.Triggers>
+                                                <DataTrigger Value="True" Binding="{Binding BrokenLink}">
+                                                    <Setter Property="Source" Value="pack://application:,,,/Images/broken_link_swe.png"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Image.Style>
+                                </Image>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>
